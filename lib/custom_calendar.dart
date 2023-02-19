@@ -1,25 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// `const CustomCalendar({
-///   Key? key,
-///   this.initialStartDate,
-///   this.initialEndDate,
-///   this.startEndDateChange,
-///   this.minimumDate,
-///   this.maximumDate,
-/// })`
 class CustomCalendar extends StatefulWidget {
-  final DateTime? minimumDate;
-
-  final DateTime? maximumDate;
-
-  final DateTime? initialStartDate;
-
-  final DateTime? initialEndDate;
-
-  final Function(DateTime, DateTime)? startEndDateChange;
-
   const CustomCalendar({
     Key? key,
     this.initialStartDate,
@@ -27,8 +9,18 @@ class CustomCalendar extends StatefulWidget {
     this.startEndDateChange,
     this.minimumDate,
     this.maximumDate,
+    this.weekendDays,
+    this.holidays,
+    this.onVacationDayClicked,
   }) : super(key: key);
-
+  final Function(String)? onVacationDayClicked;
+  final List<int>? weekendDays;
+  final List<DateTime>? holidays;
+  final DateTime? minimumDate;
+  final DateTime? maximumDate;
+  final DateTime? initialStartDate;
+  final DateTime? initialEndDate;
+  final Function(DateTime, DateTime)? startEndDateChange;
   @override
   CustomCalendarState createState() => CustomCalendarState();
 }
@@ -239,6 +231,14 @@ class CustomCalendarState extends State<CustomCalendar> {
                     child: InkWell(
                       borderRadius: const BorderRadius.all(Radius.circular(32.0)),
                       onTap: () {
+                        if (widget.weekendDays?.contains(date.weekday - 1) ?? false) {
+                          widget.onVacationDayClicked?.call('weekend day');
+                          return;
+                        }
+                        if (widget.holidays?.contains(date) ?? false) {
+                          widget.onVacationDayClicked?.call('holiday');
+                          return;
+                        }
                         if (currentMonthDate.month == date.month) {
                           if (widget.minimumDate != null && widget.maximumDate != null) {
                             final DateTime newminimumDate = DateTime(
@@ -288,15 +288,10 @@ class CustomCalendarState extends State<CustomCalendar> {
                             child: Text(
                               '${date.day}',
                               style: TextStyle(
-                                  color: getIsItStartAndEndDate(date)
-                                      ? Colors.white
-                                      : currentMonthDate.month == date.month &&
-                                              date.isBefore(widget.maximumDate!) &&
-                                              date.isAfter(widget.minimumDate!.subtract(Duration(days: 1)))
-                                          ? Colors.black
-                                          : Colors.grey.withOpacity(0.6),
-                                  fontSize: MediaQuery.of(context).size.width > 360 ? 16 : 14,
-                                  fontWeight: getIsItStartAndEndDate(date) ? FontWeight.bold : FontWeight.normal),
+                                color: getDayColor(date),
+                                fontSize: MediaQuery.of(context).size.width > 360 ? 16 : 14,
+                                fontWeight: getIsItStartAndEndDate(date) ? FontWeight.bold : FontWeight.normal,
+                              ),
                             ),
                           ),
                         ),
@@ -336,6 +331,29 @@ class CustomCalendarState extends State<CustomCalendar> {
       ));
     }
     return noList;
+  }
+
+  Color getDayColor(DateTime date) {
+    if (widget.weekendDays?.contains(date.weekday - 1) ?? false) return Colors.red;
+    if (widget.holidays?.contains(date) ?? false) return Colors.green;
+    if (getIsItStartAndEndDate(date)) {
+      return Colors.white;
+    }
+
+    if (isAvailable(date)) {
+      return Colors.black;
+    }
+
+    return Colors.grey.withOpacity(0.6);
+  }
+
+  bool isAvailable(DateTime date) {
+    final isInBoundarys = currentMonthDate.month == date.month &&
+        date.isBefore(widget.maximumDate!) &&
+        date.isAfter(widget.minimumDate!.subtract(const Duration(days: 1)));
+
+    date.weekday;
+    return isInBoundarys;
   }
 
   bool getIsInRange(DateTime date) {

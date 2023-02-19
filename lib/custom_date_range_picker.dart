@@ -2,31 +2,7 @@ import 'package:custom_date_range_picker/custom_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// `CustomDateRangePicker({
-///   Key? key,
-///   this.initialStartDate,
-///   this.initialEndDate,
-///   required this.onApplyClick,
-///   this.barrierDismissible = true,
-///   required this.minimumDate,
-///   required this.maximumDate,
-///   required this.onCancelClick,
-/// }`
 class CustomDateRangePicker extends StatefulWidget {
-  final DateTime minimumDate;
-
-  final DateTime maximumDate;
-
-  final bool barrierDismissible;
-
-  final DateTime? initialStartDate;
-
-  final DateTime? initialEndDate;
-
-  final Function(DateTime, DateTime) onApplyClick;
-
-  final Function() onCancelClick;
-
   const CustomDateRangePicker({
     Key? key,
     this.initialStartDate,
@@ -36,7 +12,20 @@ class CustomDateRangePicker extends StatefulWidget {
     required this.minimumDate,
     required this.maximumDate,
     required this.onCancelClick,
+    this.weekendDays,
+    this.holidays,
+    this.onVacationDayClicked,
   }) : super(key: key);
+  final Function(String)? onVacationDayClicked;
+  final List<int>? weekendDays;
+  final List<DateTime>? holidays;
+  final DateTime minimumDate;
+  final DateTime maximumDate;
+  final bool barrierDismissible;
+  final DateTime? initialStartDate;
+  final DateTime? initialEndDate;
+  final Function(DateTime, DateTime) onApplyClick;
+  final Function() onCancelClick;
 
   @override
   CustomDateRangePickerState createState() => CustomDateRangePickerState();
@@ -143,6 +132,9 @@ class CustomDateRangePickerState extends State<CustomDateRangePicker> with Ticke
           maximumDate: widget.maximumDate,
           initialEndDate: widget.initialEndDate,
           initialStartDate: widget.initialStartDate,
+          weekendDays: widget.weekendDays,
+          holidays: widget.holidays,
+          onVacationDayClicked: widget.onVacationDayClicked,
           startEndDateChange: (DateTime startDateData, DateTime endDateData) {
             setState(() {
               startDate = startDateData;
