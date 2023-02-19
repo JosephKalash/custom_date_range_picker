@@ -405,7 +405,9 @@ class CustomCalendarState extends State<CustomCalendar> {
   }
 
   void onDateClick(DateTime date) {
-    if (startDate == null) {
+    if (startDate == null && endDate == null) {
+      startDate = endDate = date;
+    } else if (startDate == null) {
       startDate = date;
     } else if (endDate == null) {
       endDate = date;
@@ -426,9 +428,10 @@ class CustomCalendarState extends State<CustomCalendar> {
       }
       if (date.isBefore(startDate!)) {
         startDate = date;
-      }
-      if (date.isAfter(endDate!)) {
+      } else if (date.isAfter(endDate!)) {
         endDate = date;
+      } else if (date.isAfter(startDate!) && date.isBefore(endDate!)) {
+        startDate = date;
       }
     }
     setState(() {
