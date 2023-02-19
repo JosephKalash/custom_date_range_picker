@@ -290,7 +290,9 @@ class CustomCalendarState extends State<CustomCalendar> {
                               style: TextStyle(
                                   color: getIsItStartAndEndDate(date)
                                       ? Colors.white
-                                      : currentMonthDate.month == date.month && date.isBefore(widget.maximumDate!)
+                                      : currentMonthDate.month == date.month &&
+                                              date.isBefore(widget.maximumDate!) &&
+                                              date.isAfter(widget.minimumDate!.subtract(Duration(days: 1)))
                                           ? Colors.black
                                           : Colors.grey.withOpacity(0.6),
                                   fontSize: MediaQuery.of(context).size.width > 360 ? 16 : 14,
@@ -387,7 +389,7 @@ class CustomCalendarState extends State<CustomCalendar> {
   void onDateClick(DateTime date) {
     if (startDate == null) {
       startDate = date;
-    } else if (startDate != date && endDate == null) {
+    } else if (endDate == null) {
       endDate = date;
     } else if (startDate!.day == date.day && startDate!.month == date.month) {
       startDate = null;

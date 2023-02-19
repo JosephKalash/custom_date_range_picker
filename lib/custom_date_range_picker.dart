@@ -188,7 +188,7 @@ class DialogActionButton extends StatelessWidget {
       child: Container(
         height: 38,
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(20.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(17.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: Colors.grey.withOpacity(0.6),
@@ -204,7 +204,7 @@ class DialogActionButton extends StatelessWidget {
               side: MaterialStateProperty.all(BorderSide(color: Theme.of(context).primaryColor)),
               shape: MaterialStateProperty.all(
                 const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(17.0)),
                 ),
               ),
               backgroundColor: MaterialStateProperty.all(Theme.of(context).primaryColor),
