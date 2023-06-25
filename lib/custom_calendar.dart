@@ -231,7 +231,7 @@ class CustomCalendarState extends State<CustomCalendar> {
                     child: InkWell(
                       borderRadius: const BorderRadius.all(Radius.circular(32.0)),
                       onTap: () {
-                        if (widget.weekendDays?.contains(date.weekday - 1) ?? false) {
+                        if (widget.weekendDays?.contains(date.weekday) ?? false) {
                           widget.onVacationDayClicked?.call('weekend day');
                           return;
                         }
@@ -334,7 +334,7 @@ class CustomCalendarState extends State<CustomCalendar> {
   }
 
   Color getDayColor(DateTime date) {
-    if (widget.weekendDays?.contains(date.weekday - 1) ?? false) return Colors.red;
+    if (widget.weekendDays?.contains(date.weekday) ?? false) return Colors.red;
     if (widget.holidays?.contains(date) ?? false) return Colors.green;
     if (getIsItStartAndEndDate(date)) {
       return Colors.white;
